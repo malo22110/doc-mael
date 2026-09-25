@@ -50,3 +50,6 @@ Application de suivi de l'affluence en salle d'attente d'un cabinet médical, fo
 
 ### SPEC-T03 : CI/CD
 - GitHub Actions est configuré pour compiler automatiquement l'application Flutter Web (`flutter build web`) et la déployer sur Firebase Hosting à chaque *push* sur la branche `master`.
+
+## 4. Matériel Physique (Salle d'attente)
+- **Affiche A4** : Une [affiche imprimable (HTML)](affiche.html) est fournie dans le dossier de documentation. Elle présente le QR Code de l'application, les 3 étapes d'utilisation, et garantit aux patients l'anonymat de leur participation.

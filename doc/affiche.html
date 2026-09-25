@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Affiche Doc'Mael - Salle d'attente</title>
+  <style>
+    @page {
+      size: A4 portrait;
+      margin: 0;
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: #F8FAFC;
+      color: #1E293B;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    .sheet {
+      width: 210mm;
+      height: 297mm;
+      padding: 16mm 18mm;
+      background: #FFFFFF;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+    }
+    /* Bordure décorative aux couleurs du cabinet */
+    .sheet::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 10mm;
+      background: linear-gradient(90deg, #1D829B 0%, #1D829B 70%, #D4542E 70%, #D4542E 100%);
+    }
+
+    /* En-tête */
+    header {
+      text-align: center;
+      margin-top: 6mm;
+    }
+    .cabinet-name {
+      font-size: 13pt;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: #475569;
+      margin-bottom: 4mm;
+    }
+    .app-title {
+      font-size: 42pt;
+      font-weight: 900;
+      letter-spacing: -1px;
+      line-height: 1.1;
+    }
+    .app-title .teal { color: #1D829B; }
+    .app-title .orange { color: #D4542E; }
+    .tagline {
+      font-size: 16pt;
+      font-weight: 600;
+      color: #334155;
+      margin-top: 3mm;
+    }
+
+    /* Zone Centrale / QR Code */
+    .qr-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: #F8FAFC;
+      border: 2px dashed #CBD5E1;
+      border-radius: 20px;
+      padding: 8mm 6mm;
+      text-align: center;
+    }
+    .qr-badge {
+      display: inline-block;
+      background: #1D829B;
+      color: #FFFFFF;
+      font-size: 13pt;
+      font-weight: 700;
+      padding: 2.5mm 7mm;
+      border-radius: 50px;
+      margin-bottom: 5mm;
+      letter-spacing: 0.5px;
+    }
+    .qr-image-wrapper {
+      background: #FFFFFF;
+      padding: 4mm;
+      border-radius: 16px;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .qr-image-wrapper img {
+      width: 65mm;
+      height: 65mm;
+      display: block;
+    }
+    .qr-url {
+      font-size: 14pt;
+      font-weight: 800;
+      color: #D4542E;
+      margin-top: 5mm;
+      letter-spacing: 0.3px;
+    }
+
+    /* Section Étapes (3 clics) */
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 5mm;
+      margin: 4mm 0;
+    }
+    .step-card {
+      background: #F1F5F9;
+      border-radius: 14px;
+      padding: 5mm 4mm;
+      text-align: center;
+    }
+    .step-num {
+      width: 9mm;
+      height: 9mm;
+      background: #1D829B;
+      color: #FFFFFF;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12pt;
+      font-weight: 800;
+      margin: 0 auto 3mm auto;
+    }
+    .step-text {
+      font-size: 11pt;
+      font-weight: 600;
+      color: #1E293B;
+      line-height: 1.35;
+    }
+
+    /* Paliers visuels */
+    .gauges {
+      display: flex;
+      justify-content: center;
+      gap: 3mm;
+      margin-top: 1mm;
+    }
+    .pill {
+      font-size: 9.5pt;
+      font-weight: 700;
+      padding: 1.5mm 3.5mm;
+      border-radius: 6px;
+      color: #FFFFFF;
+    }
+    .p-green { background: #16A34A; }
+    .p-orange { background: #EA580C; }
+    .p-red { background: #DC2626; }
+    .p-purple { background: #7C3AED; }
+
+    /* Pied de page & RGPD */
+    footer {
+      border-top: 1px solid #E2E8F0;
+      padding-top: 4mm;
+      text-align: center;
+    }
+    .reassurance {
+      font-size: 10pt;
+      font-weight: 600;
+      color: #475569;
+      margin-bottom: 2mm;
+    }
+    .cabinet-contact {
+      font-size: 9pt;
+      color: #64748B;
+    }
+  </style>
+</head>
+<body>
+  <div class="sheet">
+    
+    <!-- En-tête -->
+    <header>
+      <div class="cabinet-name">Cabinet Médical de Maël-Carhaix • Ti ar vedesined</div>
+      <div class="app-title">
+        <span class="teal">Doc’</span><span class="orange">Mael</span>
+      </div>
+      <div class="tagline">L’affluence en salle d’attente, partagée en direct.</div>
+    </header>
+
+    <!-- Zone QR Code -->
+    <div class="qr-container">
+      <div class="qr-badge">📱 Scannez avec votre appareil photo</div>
+      <div class="qr-image-wrapper">
+        <img src="https://api.qrserver.com/v1/create-qr-code/?size=500x500&data=https%3A%2F%2Fdoc-mael.web.app%2F&margin=0" alt="QR Code Doc'Mael">
+      </div>
+      <div class="qr-url">https://doc-mael.web.app</div>
+    </div>
+
+    <!-- 3 étapes simples -->
+    <div class="steps">
+      <div class="step-card">
+        <div class="step-num">1</div>
+        <div class="step-text">Scannez le code sans rien télécharger</div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">2</div>
+        <div class="step-text">Indiquez l’affluence en 1 seul clic</div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">3</div>
+        <div class="step-text">Aidez les prochains patients à anticiper</div>
+      </div>
+    </div>
+
+    <!-- Paliers -->
+    <div class="gauges">
+      <span class="pill p-green">0 à 2 pers.</span>
+      <span class="pill p-orange">3 à 5 pers.</span>
+      <span class="pill p-red">6 à 9 pers.</span>
+      <span class="pill p-purple">10+ pers.</span>
+    </div>
+
+    <!-- Pied de page / Respect vie privée -->
+    <footer>
+      <div class="reassurance">
+        🔒 <strong>100% Anonyme & Gratuit</strong> : aucun compte, aucun mot de passe, aucune donnée médicale collectée.
+      </div>
+      <div class="cabinet-contact">
+        Cabinet Médical — 24 Rue de la Gare, 22340 Maël-Carhaix • 02 96 24 63 86
+      </div>
+    </footer>
+
+  </div>
+</body>
+</html>

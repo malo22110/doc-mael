@@ -12,5 +12,10 @@ Pour comprendre comment le projet est construit et comment y contribuer (spécia
 - [Spécifications Fonctionnelles et Techniques (Cahier des charges)](doc/specifications.md) : Contient l'ensemble des règles métier, la vision, et les détails de l'implémentation (horaires, règles d'anonymat, etc.).
 - [Règles de l'Agent (Agent Rules)](agent.md) : Consignes strictes à destination des IA de développement sur l'accessibilité et la qualité.
 
+## 🖨️ Affiche Salle d'Attente
+Une affiche imprimable au format A4 est disponible pour encourager les patients à participer. 
+👉 **[Ouvrir l'affiche Doc'Mael (A imprimer)](doc/affiche.html)**
+*(Ouvrez le fichier `doc/affiche.html` dans votre navigateur Web et utilisez la fonction d'impression classique - Ctrl+P / Cmd+P).*
+
 ## Règle de maintien
 Cette documentation est **vivante**. À chaque ajout, modification ou suppression d'une fonctionnalité dans l'application, les fichiers de ce dossier **doivent obligatoirement** être mis à jour pour refléter l'état actuel du produit.
