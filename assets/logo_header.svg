@@ -43,6 +43,6 @@
 
   <!-- === TEXTE DOC'MAEL === -->
   <text x="114" y="65" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="46" font-weight="900" letter-spacing="-1px">
-    <tspan fill="#1D829B">Doc’</tspan><tspan fill="#D4542E">Mael</tspan>
+    <tspan fill="#FFFFFF">Doc’</tspan><tspan fill="#D4542E">Mael</tspan>
   </text>
 </svg>
