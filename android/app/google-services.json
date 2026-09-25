@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "984904712949",
+    "project_id": "doc-mael",
+    "storage_bucket": "doc-mael.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:984904712949:android:64e2e7f6141e345d0b3bbc",
+        "android_client_info": {
+          "package_name": "com.example.affluence_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAp8Xx4HEVPtMztC6uf-0EYy64Bve-Jxlo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
