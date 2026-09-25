@@ -18,15 +18,17 @@ Application de suivi de l'affluence en salle d'attente d'un cabinet médical, fo
 
 ### SPEC-F03 : Intentions de passage
 - L'utilisateur peut déclarer qu'il a l'intention de venir à un créneau horaire donné.
-- Seuls les créneaux futurs de la journée en cours sont sélectionnables.
+- Seuls les créneaux futurs de la journée en cours (ou de la prochaine journée d'ouverture) sont sélectionnables.
 - Sécurité anti-spam : Une seule réservation active à la fois par utilisateur (bloqué via le stockage local) jusqu'à ce que l'heure du créneau soit passée.
+- L'utilisateur a la possibilité d'**annuler son intention de venue** à tout moment via un bouton dédié, ce qui supprime sa prévision de la base de données.
 
 ### SPEC-F04 : Gestion des horaires d'ouverture
 - Le cabinet est ouvert :
   - Du Lundi au Vendredi : 08:00 à 18:30.
   - Le Samedi : 08:00 à 12:00.
   - Le Dimanche : Fermé.
-- En dehors des horaires d'ouverture, l'application affiche "Le cabinet est actuellement fermé" et les intentions de passage basculent automatiquement sur le prochain jour d'ouverture.
+- En dehors des horaires d'ouverture, l'application affiche "Le cabinet est actuellement fermé".
+- Lorsque le cabinet est fermé, l'écran d'accueil affiche un résumé des intentions de passage (affluence prévue) pour le prochain jour d'ouverture.
 
 ### SPEC-F05 : Interface Senior-Friendly
 - Focus absolu sur l'accessibilité pour les personnes âgées :
