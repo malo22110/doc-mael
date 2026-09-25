@@ -8,7 +8,7 @@ import '../models/daily_status.dart';
 import '../models/intention.dart';
 import '../utils/time_utils.dart';
 import '../utils/pseudo_generator.dart';
-import '../widgets/doc_mael_icon.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class HomeView extends StatefulWidget {
   final DatabaseService db;
@@ -55,7 +55,11 @@ class _HomeViewState extends State<HomeView> {
           mainAxisAlignment: MainAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
           children: [
-            const DocMaelIcon(size: 32),
+            SvgPicture.asset(
+              'assets/logo.svg',
+              width: 32,
+              height: 32,
+            ),
             const SizedBox(width: 12),
             const Text("Cabinet Médical"),
           ],
