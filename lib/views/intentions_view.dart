@@ -16,10 +16,10 @@ class IntentionsView extends StatefulWidget {
 
 class _IntentionsViewState extends State<IntentionsView> {
   String? _selectedSlot;
-  bool _submitted = false;
   bool _isLoadingLocal = true;
   String? _activeBookedDate;
   String? _activeBookedSlot;
+  String? _activeIntentionId; // ADDED
 
   @override
   void initState() {
@@ -31,8 +31,9 @@ class _IntentionsViewState extends State<IntentionsView> {
     final prefs = await SharedPreferences.getInstance();
     final bookedDate = prefs.getString('booked_intention_date');
     final bookedSlot = prefs.getString('booked_intention_slot');
+    final bookedId = prefs.getString('booked_intention_id');
 
-    if (bookedDate != null && bookedSlot != null) {
+    if (bookedDate != null && bookedSlot != null && bookedId != null) {
       final parts = bookedDate.split('-');
       if (parts.length == 3) {
         final year = int.parse(parts[0]);
@@ -49,11 +50,13 @@ class _IntentionsViewState extends State<IntentionsView> {
           setState(() {
             _activeBookedDate = bookedDate;
             _activeBookedSlot = bookedSlot;
+            _activeIntentionId = bookedId;
           });
         } else {
           // Clean up old intention
           await prefs.remove('booked_intention_date');
           await prefs.remove('booked_intention_slot');
+          await prefs.remove('booked_intention_id');
         }
       }
     }
@@ -68,8 +71,9 @@ class _IntentionsViewState extends State<IntentionsView> {
     if (_selectedSlot == null || _isSubmitting) return;
     setState(() { _isSubmitting = true; });
 
+    final intentionId = DateTime.now().millisecondsSinceEpoch.toString();
     final intention = Intention(
-      id: DateTime.now().millisecondsSinceEpoch.toString(),
+      id: intentionId,
       locationId: widget.locationId,
       targetDate: targetDateStr,
       timeSlot: _selectedSlot!,
@@ -80,14 +84,40 @@ class _IntentionsViewState extends State<IntentionsView> {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('booked_intention_date', targetDateStr);
     await prefs.setString('booked_intention_slot', _selectedSlot!);
+    await prefs.setString('booked_intention_id', intentionId);
 
     if (mounted) {
       setState(() {
-        _submitted = true;
         _isSubmitting = false;
         _activeBookedDate = targetDateStr;
         _activeBookedSlot = _selectedSlot;
+        _activeIntentionId = intentionId;
       });
+    }
+  }
+
+  Future<void> _cancelIntention() async {
+    if (_activeIntentionId == null) return;
+    
+    // Delete from DB
+    await widget.db.deleteIntention(_activeIntentionId!);
+
+    // Clear local prefs
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('booked_intention_date');
+    await prefs.remove('booked_intention_slot');
+    await prefs.remove('booked_intention_id');
+
+    if (mounted) {
+      setState(() {
+        _activeBookedDate = null;
+        _activeBookedSlot = null;
+        _activeIntentionId = null;
+        _selectedSlot = null;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Votre venue a bien été annulée.')),
+      );
     }
   }
 
@@ -102,11 +132,12 @@ class _IntentionsViewState extends State<IntentionsView> {
       appBar: AppBar(title: const Text("Prévisions")),
       body: _isLoadingLocal 
         ? const Center(child: CircularProgressIndicator())
-        : Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
+        : SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
@@ -133,13 +164,27 @@ class _IntentionsViewState extends State<IntentionsView> {
               ),
             ] else if (_activeBookedSlot != null) ...[
               Card(
-                color: Colors.green,
+                color: Colors.green.shade100,
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
-                  child: Text(
-                    "Vous avez déjà signalé votre venue le $_activeBookedDate pour le créneau $_activeBookedSlot. Merci !",
-                    style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-                    textAlign: TextAlign.center,
+                  child: Column(
+                    children: [
+                      Text(
+                        "Vous avez signalé votre venue le $_activeBookedDate pour le créneau $_activeBookedSlot. Merci !",
+                        style: TextStyle(color: Colors.green.shade900, fontWeight: FontWeight.bold, fontSize: 18),
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 16),
+                      ElevatedButton.icon(
+                        icon: const Icon(Icons.cancel),
+                        label: const Text("Annuler ma venue"),
+                        style: ElevatedButton.styleFrom(
+                          foregroundColor: Colors.red,
+                          backgroundColor: Colors.white,
+                        ),
+                        onPressed: _cancelIntention,
+                      ),
+                    ],
                   ),
                 ),
               ),
@@ -190,8 +235,7 @@ class _IntentionsViewState extends State<IntentionsView> {
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 16),
-              Expanded(
-                child: StreamBuilder<List<Intention>>(
+              StreamBuilder<List<Intention>>(
                   initialData: const [],
                   stream: widget.db.subscribeToIntentions(widget.locationId, targetDateStr),
                   builder: (context, snapshot) {
@@ -211,6 +255,8 @@ class _IntentionsViewState extends State<IntentionsView> {
                     }
 
                     return ListView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
                       itemCount: slots.length,
                       itemBuilder: (context, index) {
                         final slot = slots[index];
@@ -226,10 +272,10 @@ class _IntentionsViewState extends State<IntentionsView> {
                     );
                   },
                 ),
-              )
             ]
           ],
         ),
+      ),
       ),
     );
   }

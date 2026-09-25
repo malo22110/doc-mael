@@ -34,10 +34,20 @@ void main() {
       await tester.pumpAndSettle();
 
       // It should now show the confirmation message because of the active intention
-      expect(find.textContaining("Vous avez déjà signalé votre venue"), findsOneWidget);
+      expect(find.textContaining("Vous avez signalé votre venue"), findsOneWidget);
       
       // The slot buttons should be hidden
       expect(find.byType(ChoiceChip), findsNothing);
+
+      // --- CANCEL INTENTION ---
+      final cancelButton = find.text('Annuler ma venue');
+      expect(cancelButton, findsOneWidget);
+      await tester.tap(cancelButton);
+      await tester.pumpAndSettle();
+
+      // Check it reverted back to choice chips
+      expect(find.textContaining('Vous avez signalé votre venue'), findsNothing);
+      expect(find.byType(ChoiceChip), findsWidgets);
     });
   });
 }

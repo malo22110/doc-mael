@@ -11,6 +11,7 @@ abstract class DatabaseService {
 
   Future<void> addReport(Report report);
   Future<void> addIntention(Intention intention);
+  Future<void> deleteIntention(String id);
   Future<void> updateDailyStatus(String locationId, DailyStatus status);
 }
 
@@ -65,6 +66,11 @@ class FirestoreDatabaseService implements DatabaseService {
   @override
   Future<void> addIntention(Intention intention) async {
     await _firestore.collection('intentions').doc(intention.id).set(intention.toJson());
+  }
+
+  @override
+  Future<void> deleteIntention(String id) async {
+    await _firestore.collection('intentions').doc(id).delete();
   }
 
   @override
@@ -125,6 +131,17 @@ class InMemoryDatabaseService implements DatabaseService {
     _intentionsController.add(
       _intentions.where((i) => i.locationId == intention.locationId && i.targetDate == intention.targetDate).toList()
     );
+  }
+
+  @override
+  Future<void> deleteIntention(String id) async {
+    final idx = _intentions.indexWhere((i) => i.id == id);
+    if (idx != -1) {
+      final intention = _intentions.removeAt(idx);
+      _intentionsController.add(
+        _intentions.where((i) => i.locationId == intention.locationId && i.targetDate == intention.targetDate).toList()
+      );
+    }
   }
 
   @override
