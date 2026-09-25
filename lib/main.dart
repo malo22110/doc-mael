@@ -14,17 +14,12 @@ DatabaseService databaseService = InMemoryDatabaseService();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  try {
-    // Attempt to initialize Firebase with generated options
-    await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform,
-    );
-    databaseService = FirestoreDatabaseService();
-    print('Firebase initialized. Using Firestore.');
-  } catch (e) {
-    print('Firebase not configured. Using InMemoryDatabaseService for MVP.');
-    _seedMockData();
-  }
+  // Force Firestore to ensure we are actually using it
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  databaseService = FirestoreDatabaseService();
+  print('Firebase initialized. Using Firestore.');
   
   runApp(const AffluenceApp());
 }
