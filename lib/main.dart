@@ -9,6 +9,7 @@ import 'views/home_view.dart';
 import 'views/declare_view.dart';
 import 'views/intentions_view.dart';
 import 'views/practitioner_view.dart';
+import 'views/about_view.dart';
 import 'theme/app_theme.dart';
 
 // Provide a mock service by default unless Firebase is configured.
@@ -49,6 +50,10 @@ void main() async {
           path: '/practitioner',
           builder: (context, state) => PractitionerView(db: databaseService),
         ),
+        GoRoute(
+          path: '/about',
+          builder: (context, state) => const AboutView(),
+        ),
       ],
     ),
   ));
@@ -83,6 +88,7 @@ class AffluenceApp extends StatelessWidget {
           GoRoute(path: '/presence', builder: (_, state) => DeclareView(db: databaseService, locationId: state.uri.queryParameters['loc'] ?? 'mael_carhaix')),
           GoRoute(path: '/intentions', builder: (_, __) => IntentionsView(db: databaseService)),
           GoRoute(path: '/practitioner', builder: (_, __) => PractitionerView(db: databaseService)),
+          GoRoute(path: '/about', builder: (_, __) => const AboutView()),
         ]
       ),
     );

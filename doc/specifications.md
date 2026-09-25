@@ -53,3 +53,6 @@ Application de suivi de l'affluence en salle d'attente d'un cabinet médical, fo
 
 ## 4. Matériel Physique (Salle d'attente)
 - **Affiche A4** : Une [affiche imprimable (HTML)](affiche.html) est fournie dans le dossier de documentation. Elle présente le QR Code de l'application, les 3 étapes d'utilisation, et garantit aux patients l'anonymat de leur participation.
+
+## 5. Aspects Juridiques et Responsabilité
+- **Page 'À propos'** : Une page '/about' accessible depuis l'accueil rappelle le fonctionnement collaboratif (type Waze), précise l'absence de collecte de données (pseudonymes bretons), et intègre une clause de non-responsabilité (disclaimer) claire indiquant que les données sont fournies par les utilisateurs, qu'elles sont purement indicatives, et que le secrétariat ou les médecins ne peuvent en aucun cas être tenus responsables de l'exactitude de ces informations.

@@ -248,6 +248,36 @@ class _HomeViewState extends State<HomeView> {
                   padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
                 ),
               ),
+              
+            const SizedBox(height: 48),
+            // Disclaimer
+            Card(
+              elevation: 0,
+              color: Colors.grey.shade100,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+                side: BorderSide(color: Colors.grey.shade300),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  children: [
+                    const Icon(Icons.info_outline, color: Colors.grey, size: 28),
+                    const SizedBox(height: 8),
+                    Text(
+                      "Ces données sont fournies par les patients à titre purement indicatif et ne sont pas gérées par le cabinet médical.",
+                      style: TextStyle(color: Colors.grey.shade800, fontSize: 13, height: 1.4),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 8),
+                    TextButton(
+                      onPressed: () => context.push('/about'),
+                      child: const Text("À propos et Responsabilité"),
+                    ),
+                  ],
+                ),
+              ),
+            ),
           ],
         ),
       ),
