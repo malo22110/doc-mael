@@ -41,7 +41,7 @@ Application de suivi de l'affluence en salle d'attente d'un cabinet médical, fo
 
 ### SPEC-T01 : Anonymat et Identification
 - **Anonymat Absolu** : Aucune donnée personnelle (nom, prénom, email, téléphone) n'est demandée ou stockée en base de données.
-- Un pseudo aléatoire (ex: `Patient_4562`) est généré localement lors de la première ouverture de l'application et stocké dans les `SharedPreferences`.
+- Un pseudo aléatoire convivial à connotation bretonne (ex: `KouignSalé`, `GaletteSaucisse`, `MenhirEnBottes`) est généré localement lors de la première ouverture de l'application et stocké dans les `SharedPreferences`. Il permet d'éviter que les patients ne confondent un numéro de "Patient_1234" avec un numéro de file d'attente (ticket).
 
 ### SPEC-T02 : Base de données
 - Firebase Firestore est utilisé comme backend de production.

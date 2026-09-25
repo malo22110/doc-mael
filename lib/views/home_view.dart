@@ -7,6 +7,7 @@ import '../models/report.dart';
 import '../models/daily_status.dart';
 import '../models/intention.dart';
 import '../utils/time_utils.dart';
+import '../utils/pseudo_generator.dart';
 
 class HomeView extends StatefulWidget {
   final DatabaseService db;
@@ -31,8 +32,7 @@ class _HomeViewState extends State<HomeView> {
     final prefs = await SharedPreferences.getInstance();
     String? pseudo = prefs.getString('user_pseudo');
     if (pseudo == null) {
-      final random = Random();
-      pseudo = "Patient_${random.nextInt(10000)}";
+      pseudo = BretonPseudoGenerator.generate();
       await prefs.setString('user_pseudo', pseudo);
     }
     setState(() {
