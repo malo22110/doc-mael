@@ -51,18 +51,9 @@ class _HomeViewState extends State<HomeView> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            SvgPicture.asset(
-              'assets/logo.svg',
-              width: 32,
-              height: 32,
-            ),
-            const SizedBox(width: 12),
-            const Text("Cabinet Médical"),
-          ],
+        title: SvgPicture.asset(
+          'assets/logo_header.svg',
+          height: 38,
         ),
         centerTitle: true,
       ),
