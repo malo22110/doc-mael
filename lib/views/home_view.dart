@@ -5,6 +5,7 @@ import 'dart:math';
 import '../services/database.dart';
 import '../models/report.dart';
 import '../models/daily_status.dart';
+import '../models/intention.dart';
 import '../utils/time_utils.dart';
 
 class HomeView extends StatefulWidget {
@@ -67,7 +68,7 @@ class _HomeViewState extends State<HomeView> {
                 ),
               ),
             
-            if (!isOpen)
+            if (!isOpen) ...[
               Card(
                 color: Colors.red.shade100,
                 child: Padding(
@@ -90,8 +91,72 @@ class _HomeViewState extends State<HomeView> {
                     ],
                   ),
                 ),
-              )
-            else ...[
+              ),
+              const SizedBox(height: 24),
+              const Text(
+                "Prévisions pour la prochaine ouverture",
+                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 16),
+              StreamBuilder<List<Intention>>(
+                stream: widget.db.subscribeToIntentions(widget.locationId, targetDateStr),
+                builder: (context, snapshot) {
+                  if (snapshot.hasError) {
+                    return Text('Erreur : ${snapshot.error}', style: const TextStyle(color: Colors.red));
+                  }
+                  
+                  final intentions = snapshot.data ?? [];
+                  if (intentions.isEmpty) {
+                    return const Card(
+                      child: Padding(
+                        padding: EdgeInsets.all(16.0),
+                        child: Text("Aucune venue signalée pour le moment.", textAlign: TextAlign.center),
+                      ),
+                    );
+                  }
+
+                  final Map<String, int> grouped = {};
+                  for (var intention in intentions) {
+                    grouped[intention.timeSlot] = (grouped[intention.timeSlot] ?? 0) + 1;
+                  }
+
+                  // Sort slots
+                  final sortedSlots = grouped.keys.toList()..sort();
+
+                  return Card(
+                    child: ListView.separated(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: sortedSlots.length,
+                      separatorBuilder: (context, index) => const Divider(height: 1),
+                      itemBuilder: (context, index) {
+                        final slot = sortedSlots[index];
+                        final count = grouped[slot]!;
+                        return ListTile(
+                          leading: const Icon(Icons.schedule),
+                          title: Text(slot, style: const TextStyle(fontWeight: FontWeight.bold)),
+                          trailing: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                            decoration: BoxDecoration(
+                              color: Theme.of(context).colorScheme.primaryContainer,
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Text(
+                              "$count patient(s)",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Theme.of(context).colorScheme.onPrimaryContainer,
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  );
+                },
+              ),
+            ] else ...[
               StreamBuilder<DailyStatus?>(
                 stream: widget.db.subscribeToDailyStatus(widget.locationId, targetDateStr),
                 builder: (context, snapshot) {
