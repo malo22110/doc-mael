@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'firebase_options.dart';
 import 'models/daily_status.dart';
 import 'services/database.dart';
@@ -12,6 +13,7 @@ import 'theme/app_theme.dart';
 
 // Provide a mock service by default unless Firebase is configured.
 DatabaseService databaseService = InMemoryDatabaseService();
+FirebaseAnalytics? analytics;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,9 +22,36 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   databaseService = FirestoreDatabaseService();
-  print('Firebase initialized. Using Firestore.');
+  analytics = FirebaseAnalytics.instance;
+  print('Firebase initialized. Using Firestore and Analytics.');
   
-  runApp(const AffluenceApp());
+  runApp(AffluenceApp(
+    router: GoRouter(
+      initialLocation: '/',
+      observers: [FirebaseAnalyticsObserver(analytics: analytics!)],
+      routes: [
+        GoRoute(
+          path: '/',
+          builder: (context, state) => HomeView(db: databaseService),
+        ),
+        GoRoute(
+          path: '/presence',
+          builder: (context, state) {
+            final loc = state.uri.queryParameters['loc'] ?? 'mael_carhaix';
+            return DeclareView(db: databaseService, locationId: loc);
+          },
+        ),
+        GoRoute(
+          path: '/intentions',
+          builder: (context, state) => IntentionsView(db: databaseService),
+        ),
+        GoRoute(
+          path: '/practitioner',
+          builder: (context, state) => PractitionerView(db: databaseService),
+        ),
+      ],
+    ),
+  ));
 }
 
 void _seedMockData() {
@@ -38,40 +67,24 @@ void _seedMockData() {
   ));
 }
 
-final GoRouter _router = GoRouter(
-  initialLocation: '/',
-  routes: [
-    GoRoute(
-      path: '/',
-      builder: (context, state) => HomeView(db: databaseService),
-    ),
-    GoRoute(
-      path: '/presence',
-      builder: (context, state) {
-        final loc = state.uri.queryParameters['loc'] ?? 'mael_carhaix';
-        return DeclareView(db: databaseService, locationId: loc);
-      },
-    ),
-    GoRoute(
-      path: '/intentions',
-      builder: (context, state) => IntentionsView(db: databaseService),
-    ),
-    GoRoute(
-      path: '/practitioner',
-      builder: (context, state) => PractitionerView(db: databaseService),
-    ),
-  ],
-);
-
 class AffluenceApp extends StatelessWidget {
-  const AffluenceApp({super.key});
+  final GoRouter? router;
+  const AffluenceApp({super.key, this.router});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
       title: 'Affluence Cabinet Médical',
       theme: DocMaelTheme.lightTheme,
-      routerConfig: _router,
+      routerConfig: router ?? GoRouter(
+        initialLocation: '/',
+        routes: [
+          GoRoute(path: '/', builder: (_, __) => HomeView(db: databaseService)),
+          GoRoute(path: '/presence', builder: (_, state) => DeclareView(db: databaseService, locationId: state.uri.queryParameters['loc'] ?? 'mael_carhaix')),
+          GoRoute(path: '/intentions', builder: (_, __) => IntentionsView(db: databaseService)),
+          GoRoute(path: '/practitioner', builder: (_, __) => PractitionerView(db: databaseService)),
+        ]
+      ),
     );
   }
 }
