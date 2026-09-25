@@ -5,12 +5,11 @@ class TimeUtils {
     double hour = time.hour + time.minute / 60.0;
     bool morning = hour >= 8.0 && hour < 12.0;
     bool afternoon = hour >= 14.0 && hour < 18.5;
-    bool fakeTestHours = hour >= 22.0 && hour < 24.0; // TEMPORARY FOR TESTING
     
     if (time.weekday == DateTime.saturday) {
-      return morning || fakeTestHours;
+      return morning;
     }
-    return morning || afternoon || fakeTestHours;
+    return morning || afternoon;
   }
 
   static DateTime getNextOpenDate(DateTime now) {
@@ -19,14 +18,13 @@ class TimeUtils {
       return DateTime(now.year, now.month, now.day).add(const Duration(days: 1));
     }
     
-    // If Saturday after 24:00 (which is impossible, but handle normal closing)
-    // Actually we added 22-24h so it closes at midnight
-    if (now.weekday == DateTime.saturday && now.hour >= 23 && now.minute >= 59) {
+    // If Saturday after 12:00
+    if (now.weekday == DateTime.saturday && now.hour >= 12) {
       return DateTime(now.year, now.month, now.day).add(const Duration(days: 2));
     }
     
-    // If weekday after 23:59, next is tomorrow
-    if (now.weekday < DateTime.saturday && (now.hour >= 23 && now.minute >= 59)) {
+    // If weekday after 18:30
+    if (now.weekday < DateTime.saturday && (now.hour > 18 || (now.hour == 18 && now.minute >= 30))) {
       return DateTime(now.year, now.month, now.day).add(const Duration(days: 1));
     }
     
@@ -34,53 +32,44 @@ class TimeUtils {
     return DateTime(now.year, now.month, now.day);
   }
 
-  static List<String> getSlotsForDate(DateTime date, DateTime now) {
-    List<String> allSlots = [];
-    if (date.weekday != DateTime.sunday) {
-      allSlots.addAll([
-        "08:00 - 09:00",
-        "09:00 - 10:00",
-        "10:00 - 11:00",
-        "11:00 - 12:00",
-      ]);
-    }
-    if (date.weekday < DateTime.saturday) {
+  static List<String> getAvailableSlots(DateTime date) {
+    if (date.weekday == DateTime.sunday) return [];
+
+    List<String> allSlots = [
+      "08:00 - 09:00",
+      "09:00 - 10:00",
+      "10:00 - 11:00",
+      "11:00 - 12:00",
+    ];
+
+    if (date.weekday != DateTime.saturday) {
       allSlots.addAll([
         "14:00 - 15:00",
         "15:00 - 16:00",
         "16:00 - 17:00",
-        "17:00 - 18:30",
+        "17:00 - 18:00",
+        "18:00 - 18:30",
       ]);
     }
 
-    // FAKE SLOTS FOR TESTING
-    if (date.weekday != DateTime.sunday) {
-      allSlots.addAll([
-        "22:00 - 23:00",
-        "23:00 - 23:59",
-      ]);
-    }
-
-    // Filter past slots if the date is today
+    // Filter out past slots if the date is today
+    final now = DateTime.now();
     if (date.year == now.year && date.month == now.month && date.day == now.day) {
       return allSlots.where((slot) {
-        final parts = slot.split(' - ')[1].split(':');
-        final endHour = int.parse(parts[0]);
-        final endMinute = int.parse(parts[1]);
+        final endHour = int.parse(slot.split(" - ")[1].split(":")[0]);
+        final endMinute = int.parse(slot.split(" - ")[1].split(":")[1]);
         
-        final slotEnd = DateTime(now.year, now.month, now.day, endHour, endMinute);
-        return now.isBefore(slotEnd);
+        if (now.hour < endHour) return true;
+        if (now.hour == endHour && now.minute < endMinute) return true;
+        return false;
       }).toList();
     }
 
     return allSlots;
   }
 
-  static String formatDate(DateTime date) {
-    const days = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'];
-    const months = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
-    
-    return "${days[date.weekday - 1]} ${date.day} ${months[date.month - 1]}";
+  static String getFormattedDate(DateTime date) {
+    return "${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')}";
   }
 
   static String toDateString(DateTime date) {
