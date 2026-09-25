@@ -8,6 +8,7 @@ import 'views/home_view.dart';
 import 'views/declare_view.dart';
 import 'views/intentions_view.dart';
 import 'views/practitioner_view.dart';
+import 'theme/app_theme.dart';
 
 // Provide a mock service by default unless Firebase is configured.
 DatabaseService databaseService = InMemoryDatabaseService();
@@ -69,10 +70,7 @@ class AffluenceApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp.router(
       title: 'Affluence Cabinet Médical',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.teal),
-        useMaterial3: true,
-      ),
+      theme: DocMaelTheme.lightTheme,
       routerConfig: _router,
     );
   }

@@ -13,22 +13,15 @@ class TimeUtils {
   }
 
   static DateTime getNextOpenDate(DateTime now) {
-    // If it's Sunday, next is Monday
     if (now.weekday == DateTime.sunday) {
       return DateTime(now.year, now.month, now.day).add(const Duration(days: 1));
     }
-    
-    // If Saturday after 12:00
     if (now.weekday == DateTime.saturday && now.hour >= 12) {
       return DateTime(now.year, now.month, now.day).add(const Duration(days: 2));
     }
-    
-    // If weekday after 18:30
     if (now.weekday < DateTime.saturday && (now.hour > 18 || (now.hour == 18 && now.minute >= 30))) {
       return DateTime(now.year, now.month, now.day).add(const Duration(days: 1));
     }
-    
-    // Otherwise, it's today
     return DateTime(now.year, now.month, now.day);
   }
 
@@ -52,7 +45,6 @@ class TimeUtils {
       ]);
     }
 
-    // Filter out past slots if the date is today
     final now = DateTime.now();
     if (date.year == now.year && date.month == now.month && date.day == now.day) {
       return allSlots.where((slot) {
@@ -71,8 +63,16 @@ class TimeUtils {
   static String getFormattedDate(DateTime date) {
     return "${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')}";
   }
+  
+  static String formatDate(DateTime date) {
+    return getFormattedDate(date);
+  }
 
   static String toDateString(DateTime date) {
     return "${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}";
+  }
+
+  static List<String> getSlotsForDate(DateTime targetDate, DateTime now) {
+    return getAvailableSlots(targetDate);
   }
 }
