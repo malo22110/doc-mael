@@ -59,7 +59,7 @@ class AboutView extends StatelessWidget {
             Center(
               child: ElevatedButton.icon(
                 onPressed: () async {
-                  final url = Uri.parse('https://www.buymeacoffee.com/malo22110'); // Remplacez par le bon lien
+                  final url = Uri.parse('https://www.buymeacoffee.com/malobiche');
                   if (await canLaunchUrl(url)) {
                     await launchUrl(url, mode: LaunchMode.externalApplication);
                   }
