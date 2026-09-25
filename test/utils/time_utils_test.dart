@@ -20,9 +20,6 @@ void main() {
 
       // Sunday 10:00 (Closed)
       expect(TimeUtils.isOpen(DateTime(2026, 9, 27, 10, 0)), isFalse);
-
-      // Fake Test Hours (22:00 - 24:00)
-      expect(TimeUtils.isOpen(DateTime(2026, 9, 21, 22, 30)), isTrue);
     });
 
     test('[SPEC-F04] getNextOpenDate should return the correct next available day', () {
