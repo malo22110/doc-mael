@@ -25,7 +25,7 @@ void main() {
       expect(deserialized.locationId, 'loc1');
     });
 
-    test('DailyStatus should serialize to and from JSON', () {
+    test('[SPEC-T02] DailyStatus should serialize to and from JSON', () {
       final now = DateTime.now();
       final status = DailyStatus(
         date: '2026-09-25',
@@ -36,9 +36,9 @@ void main() {
 
       final json = status.toJson();
       expect(json['active_doctors'], 3);
-      expect(json['date'], '2026-09-25');
+      expect(json['date'], null); // Not in json
 
-      final deserialized = DailyStatus.fromJson(json, 'doc_id');
+      final deserialized = DailyStatus.fromJson(json, '2026-09-25');
       expect(deserialized.activeDoctors, 3);
       expect(deserialized.date, '2026-09-25');
     });

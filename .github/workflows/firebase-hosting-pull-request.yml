@@ -17,6 +17,8 @@ jobs:
         with:
           channel: 'stable'
       - run: flutter pub get
+      - name: Run Tests
+        run: flutter test
       - run: flutter build web
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
