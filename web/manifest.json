@@ -1,11 +1,11 @@
 {
-    "name": "affluence_app",
-    "short_name": "affluence_app",
+    "name": "Doc'Mael",
+    "short_name": "Doc'Mael",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "background_color": "#F8FAFC",
+    "theme_color": "#1D829B",
+    "description": "L'affluence en salle d'attente, partagée en direct.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

@@ -1,8 +1,8 @@
-# Affluence App - Cabinet Médical
+# Doc'Mael - Cabinet Médical
 
-Bienvenue dans le dépôt du projet **Affluence App**. 
+Bienvenue dans le dépôt du projet **Doc'Mael**. 
 
-Il s'agit d'une application Web/Mobile à destination des patients d'un cabinet médical. Son fonctionnement collaboratif (similaire à "Waze") permet aux patients présents dans la salle d'attente d'estimer et de partager l'affluence en temps réel (nombre de personnes, médecins actifs). L'objectif est d'aider les futurs arrivants à anticiper leur venue.
+Il s'agit d'une application Web/Mobile (PWA) à destination des patients du cabinet médical de Maël-Carhaix. Son fonctionnement collaboratif (similaire à "Waze") permet aux patients présents dans la salle d'attente d'estimer et de partager l'affluence en temps réel (nombre de personnes, intentions de visites). L'objectif est d'aider les futurs arrivants à anticiper leur venue.
 
 ---
 

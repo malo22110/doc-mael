@@ -74,7 +74,7 @@ class AffluenceApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
-      title: 'Affluence Cabinet Médical',
+      title: "Doc'Mael",
       theme: DocMaelTheme.lightTheme,
       routerConfig: router ?? GoRouter(
         initialLocation: '/',
