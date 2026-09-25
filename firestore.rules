@@ -1,0 +1,11 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /{document=**} {
+      // Allow read/write for testing. 
+      // In production, we should tighten this (e.g. only allow specific formats for reports)
+      allow read, write: if true;
+    }
+  }
+}
