@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class AboutView extends StatelessWidget {
   const AboutView({super.key});
@@ -54,6 +55,30 @@ class AboutView extends StatelessWidget {
               "Cette information est alors immédiatement partagée à toute la communauté pour aider les prochains arrivants à anticiper leur venue.",
             ),
             
+            const SizedBox(height: 24),
+            Center(
+              child: ElevatedButton.icon(
+                onPressed: () async {
+                  final url = Uri.parse('https://www.buymeacoffee.com/malo22110'); // Remplacez par le bon lien
+                  if (await canLaunchUrl(url)) {
+                    await launchUrl(url, mode: LaunchMode.externalApplication);
+                  }
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFFFFDD00),
+                  foregroundColor: Colors.black,
+                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+                icon: const Icon(Icons.coffee, size: 28),
+                label: const Text(
+                  "Soutenir le projet (Buy me a coffee)",
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+              ),
+            ),
             const SizedBox(height: 40),
             Center(
               child: Text(
