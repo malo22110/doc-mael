@@ -76,33 +76,33 @@ class _HomeViewState extends State<HomeView> {
               Card(
                 color: Colors.red.shade100,
                 child: Padding(
-                  padding: const EdgeInsets.all(24.0),
+                  padding: const EdgeInsets.all(16.0),
                   child: Column(
                     children: [
-                      const Icon(Icons.lock_clock, size: 48, color: Colors.red),
-                      const SizedBox(height: 16),
+                      const Icon(Icons.lock_clock, size: 36, color: Colors.red),
+                      const SizedBox(height: 8),
                       const Text(
                         "Le cabinet est actuellement fermé.",
-                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.red),
+                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.red),
                         textAlign: TextAlign.center,
                       ),
-                      const SizedBox(height: 8),
+                      const SizedBox(height: 4),
                       Text(
                         "Prochaine ouverture :\n${TimeUtils.formatDate(targetDate)}",
-                        style: const TextStyle(fontSize: 16),
+                        style: const TextStyle(fontSize: 14),
                         textAlign: TextAlign.center,
                       ),
                     ],
                   ),
                 ),
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 16),
               const Text(
                 "Prévisions pour la prochaine ouverture",
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 12),
               StreamBuilder<List<Intention>>(
                 stream: widget.db.subscribeToIntentions(widget.locationId, targetDateStr),
                 builder: (context, snapshot) {
@@ -143,10 +143,11 @@ class _HomeViewState extends State<HomeView> {
                         final slot = sortedSlots[index];
                         final count = grouped[slot]!;
                         return ListTile(
+                          visualDensity: VisualDensity.compact,
                           leading: const Icon(Icons.schedule),
                           title: Text(slot, style: const TextStyle(fontWeight: FontWeight.bold)),
                           trailing: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                             decoration: BoxDecoration(
                               color: Theme.of(context).colorScheme.primaryContainer,
                               borderRadius: BorderRadius.circular(12),
@@ -155,6 +156,7 @@ class _HomeViewState extends State<HomeView> {
                               "$count patient(s)",
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
+                                fontSize: 13,
                                 color: Theme.of(context).colorScheme.onPrimaryContainer,
                               ),
                             ),
@@ -177,16 +179,16 @@ class _HomeViewState extends State<HomeView> {
                   return Card(
                     color: Theme.of(context).colorScheme.primaryContainer,
                     child: Padding(
-                      padding: const EdgeInsets.all(24.0),
+                      padding: const EdgeInsets.all(16.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const Icon(Icons.medical_services, size: 36),
-                          const SizedBox(width: 12),
+                          const Icon(Icons.medical_services, size: 28),
+                          const SizedBox(width: 8),
                           Expanded(
                             child: Text(
                               "$doctors médecin(s) en consultation aujourd'hui",
-                              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
+                              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                               textAlign: TextAlign.center,
                             ),
                           ),
@@ -196,13 +198,13 @@ class _HomeViewState extends State<HomeView> {
                   );
                 },
               ),
-              const SizedBox(height: 32),
+              const SizedBox(height: 16),
               const Text(
                 "Affluence en salle d'attente",
-                style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 12),
               StreamBuilder<Report?>(
                 stream: widget.db.subscribeToLatestReport(widget.locationId),
                 builder: (context, snapshot) {
@@ -221,35 +223,35 @@ class _HomeViewState extends State<HomeView> {
               ),
             ],
             
-            const SizedBox(height: 32),
+            const SizedBox(height: 16),
             ElevatedButton.icon(
               onPressed: () => context.push('/intentions'),
-              icon: const Icon(Icons.calendar_month, size: 32),
+              icon: const Icon(Icons.calendar_month, size: 28),
               label: Text(
                 isOpen ? "J'ai prévu de venir aujourd'hui" : "J'ai prévu de venir à la prochaine ouverture",
-                style: const TextStyle(fontSize: 20),
+                style: const TextStyle(fontSize: 18),
                 textAlign: TextAlign.center,
               ),
               style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
+                padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
               ),
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 16),
             if (isOpen)
               OutlinedButton.icon(
                 onPressed: () => context.push('/presence?loc=${widget.locationId}'),
-                icon: const Icon(Icons.qr_code_scanner, size: 32),
+                icon: const Icon(Icons.qr_code_scanner, size: 28),
                 label: const Text(
                   "Je suis arrivé dans la salle d'attente",
-                  style: TextStyle(fontSize: 20),
+                  style: TextStyle(fontSize: 18),
                   textAlign: TextAlign.center,
                 ),
                 style: OutlinedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
+                  padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
                 ),
               ),
               
-            const SizedBox(height: 48),
+            const SizedBox(height: 24),
             // Disclaimer
             Card(
               elevation: 0,
@@ -323,7 +325,7 @@ class _HomeViewState extends State<HomeView> {
       elevation: 4,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: Container(
-        padding: const EdgeInsets.all(24.0),
+        padding: const EdgeInsets.all(16.0),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),
           border: Border.all(color: gaugeColor, width: 4),
@@ -333,28 +335,29 @@ class _HomeViewState extends State<HomeView> {
             Text(
               report.countRange,
               style: TextStyle(
-                fontSize: 48,
+                fontSize: 36,
                 fontWeight: FontWeight.bold,
                 color: gaugeColor,
               ),
             ),
-            const Text("personnes estimées"),
-            const SizedBox(height: 8),
+            const Text("personnes estimées", style: TextStyle(fontSize: 14)),
+            const SizedBox(height: 4),
             Text(
               statusText.toUpperCase(),
               style: TextStyle(
-                fontSize: 24,
+                fontSize: 20,
                 fontWeight: FontWeight.bold,
                 color: gaugeColor,
               ),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 8),
             Text(
               isStale
-                  ? "Donnée potentiellement obsolète – Aucun signalement récent"
+                  ? "Potentiellement obsolète"
                   : "Mis à jour il y a ${difference.inMinutes} min",
               style: TextStyle(
                 fontStyle: FontStyle.italic,
+                fontSize: 13,
                 color: isStale ? Colors.grey : Colors.black54,
               ),
               textAlign: TextAlign.center,

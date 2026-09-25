@@ -205,6 +205,7 @@ class _IntentionsViewState extends State<IntentionsView> {
                     label: Text(slot, style: const TextStyle(fontSize: 20)),
                     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                     selected: _selectedSlot == slot,
+                    showCheckmark: false,
                     onSelected: (selected) {
                       setState(() {
                         _selectedSlot = selected ? slot : null;
