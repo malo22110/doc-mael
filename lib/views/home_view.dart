@@ -107,7 +107,12 @@ class _HomeViewState extends State<HomeView> {
                   }
                   
                   final intentions = snapshot.data ?? [];
-                  if (intentions.isEmpty) {
+                  
+                  // Filter out any old test slots or invalid slots
+                  final validSlots = TimeUtils.getSlotsForDate(targetDate, now);
+                  final validIntentions = intentions.where((i) => validSlots.contains(i.timeSlot)).toList();
+
+                  if (validIntentions.isEmpty) {
                     return const Card(
                       child: Padding(
                         padding: EdgeInsets.all(16.0),
@@ -117,7 +122,7 @@ class _HomeViewState extends State<HomeView> {
                   }
 
                   final Map<String, int> grouped = {};
-                  for (var intention in intentions) {
+                  for (var intention in validIntentions) {
                     grouped[intention.timeSlot] = (grouped[intention.timeSlot] ?? 0) + 1;
                   }
 
