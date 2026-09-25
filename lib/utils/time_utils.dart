@@ -1,5 +1,11 @@
 class TimeUtils {
+  static bool forceOpenForTesting = false;
+  static DateTime? mockNowForTesting;
+
+  static DateTime get now => mockNowForTesting ?? DateTime.now();
+
   static bool isOpen(DateTime time) {
+    if (forceOpenForTesting) return true;
     if (time.weekday == DateTime.sunday) return false;
     
     double hour = time.hour + time.minute / 60.0;

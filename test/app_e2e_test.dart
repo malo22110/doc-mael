@@ -11,14 +11,14 @@ void main() {
       SharedPreferences.setMockInitialValues({});
       databaseService = InMemoryDatabaseService();
       
+      TimeUtils.forceOpenForTesting = true;
+
       await tester.pumpWidget(const AffluenceApp());
       await tester.pumpAndSettle();
 
-      final now = DateTime.now();
-      if (TimeUtils.isOpen(now)) {
-        // --- 1. TEST DECLARE CROWDING ---
-        final arriveButton = find.text("Je suis arrivé dans la salle d'attente");
-        expect(arriveButton, findsOneWidget);
+      // --- 1. TEST DECLARE CROWDING ---
+      final arriveButton = find.text("Je suis arrivé dans la salle d'attente");
+      expect(arriveButton, findsOneWidget);
         await tester.tap(arriveButton);
         await tester.pumpAndSettle();
 
@@ -30,7 +30,6 @@ void main() {
         // Redirected back to HomeView, check if gauge updated
         await tester.pumpAndSettle(const Duration(seconds: 3)); // Wait for snackbar
         expect(find.text("0-2"), findsOneWidget, reason: "Gauge should show the new value");
-      }
     });
   });
 }
