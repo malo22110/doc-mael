@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:affluence_app/main.dart';
 import 'package:affluence_app/services/database.dart';
 import 'package:affluence_app/utils/time_utils.dart';
+import 'package:affluence_app/views/declare_view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
@@ -12,6 +13,7 @@ void main() {
       databaseService = InMemoryDatabaseService();
       
       TimeUtils.forceOpenForTesting = true;
+      DeclareView.bypassLocationForTesting = true;
 
       await tester.pumpWidget(const AffluenceApp());
       await tester.pumpAndSettle();

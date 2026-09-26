@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:geolocator/geolocator.dart';
 import '../services/database.dart';
 import '../models/report.dart';
 import '../models/daily_status.dart';
@@ -7,6 +8,8 @@ import '../models/daily_status.dart';
 class DeclareView extends StatefulWidget {
   final DatabaseService db;
   final String locationId;
+  
+  static bool bypassLocationForTesting = false;
 
   const DeclareView({super.key, required this.db, required this.locationId});
 
@@ -16,6 +19,66 @@ class DeclareView extends StatefulWidget {
 
 class _DeclareViewState extends State<DeclareView> {
   int? _selectedDoctors;
+  bool _isCheckingLocation = true;
+  bool _isLocationValid = false;
+  String? _locationError;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkLocation();
+  }
+
+  Future<void> _checkLocation() async {
+    if (DeclareView.bypassLocationForTesting) {
+      setState(() {
+        _isCheckingLocation = false;
+        _isLocationValid = true;
+      });
+      return;
+    }
+
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    // Cabinet de Maël-Carhaix
+    const targetLat = 48.2568;
+    const targetLon = -3.3986;
+    const double maxDistanceMeters = 2000; // 2km radius to account for poor GPS/Web location
+
+    try {
+      serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      if (!serviceEnabled) {
+        if (mounted) setState(() { _isCheckingLocation = false; _locationError = "Les services de localisation sont désactivés. Veuillez les activer."; });
+        return;
+      }
+
+      permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+        if (permission == LocationPermission.denied) {
+          if (mounted) setState(() { _isCheckingLocation = false; _locationError = "L'autorisation de localisation a été refusée."; });
+          return;
+        }
+      }
+
+      if (permission == LocationPermission.deniedForever) {
+        if (mounted) setState(() { _isCheckingLocation = false; _locationError = "Les autorisations de localisation sont refusées définitivement."; });
+        return;
+      }
+
+      Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+      double distanceInMeters = Geolocator.distanceBetween(position.latitude, position.longitude, targetLat, targetLon);
+
+      if (distanceInMeters <= maxDistanceMeters) {
+        if (mounted) setState(() { _isCheckingLocation = false; _isLocationValid = true; });
+      } else {
+        if (mounted) setState(() { _isCheckingLocation = false; _locationError = "Vous êtes trop éloigné(e) du cabinet médical pour faire une déclaration."; });
+      }
+    } catch (e) {
+      if (mounted) setState(() { _isCheckingLocation = false; _locationError = "Erreur lors de la vérification de votre position."; });
+    }
+  }
 
   String _getTargetDate() {
     final now = DateTime.now();
@@ -58,6 +121,56 @@ class _DeclareViewState extends State<DeclareView> {
 
   @override
   Widget build(BuildContext context) {
+    if (_isCheckingLocation) {
+      return Scaffold(
+        appBar: AppBar(title: const Text("Vérification...")),
+        body: const Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              CircularProgressIndicator(),
+              SizedBox(height: 16),
+              Text("Vérification de votre position...", style: TextStyle(fontSize: 16)),
+            ],
+          ),
+        ),
+      );
+    }
+
+    if (!_isLocationValid) {
+      return Scaffold(
+        appBar: AppBar(title: const Text("Déclaration bloquée")),
+        body: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(24.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(Icons.location_off, size: 64, color: Colors.red),
+                const SizedBox(height: 24),
+                Text(
+                  _locationError ?? "Erreur de localisation",
+                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 16),
+                const Text(
+                  "Pour garantir la fiabilité des données, vous devez être à proximité du cabinet médical pour déclarer l'affluence.",
+                  style: TextStyle(fontSize: 16, color: Colors.grey),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 32),
+                ElevatedButton(
+                  onPressed: () => context.go('/'),
+                  child: const Text("Retour à l'accueil"),
+                )
+              ],
+            ),
+          ),
+        ),
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: const Text("Déclarer l'affluence"),
