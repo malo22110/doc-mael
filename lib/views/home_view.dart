@@ -344,7 +344,7 @@ class _HomeViewState extends State<HomeView> {
       statusText = "Faible";
     } else if (report.countRange == '6-10') {
       gaugeColor = Colors.lightGreen;
-      statusText = "Faible";
+      statusText = "Modérée";
     } else if (report.countRange == '11-15') {
       gaugeColor = Colors.orange;
       statusText = "Forte";
