@@ -8,7 +8,7 @@ Application de suivi de l'affluence en salle d'attente d'un cabinet médical, fo
 ## 2. Fonctionnalités Principales (Spécifications Fonctionnelles)
 
 ### SPEC-F01 : Mode collaboratif (Déclaration d'affluence)
-- L'utilisateur peut déclarer le niveau d'affluence via 4 tranches : `0-2`, `3-5`, `6-9`, `10+` personnes.
+- L'utilisateur peut déclarer le niveau d'affluence via 5 tranches : `0-5` (Faible), `6-10` (Faible), `11-15` (Forte), `16-20` (Très forte), `20+` (Saturé) personnes.
 - L'accès à la déclaration se fait soit par QR code (dans le cabinet), soit via un bouton "Je suis arrivé dans la salle d'attente".
 - La dernière tranche déclarée est affichée publiquement avec un horodatage.
 

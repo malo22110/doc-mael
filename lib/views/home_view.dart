@@ -339,15 +339,21 @@ class _HomeViewState extends State<HomeView> {
     Color gaugeColor;
     String statusText;
 
-    if (report.countRange == '0-2' || report.countRange == '3-5') {
+    if (report.countRange == '0-5') {
       gaugeColor = Colors.green;
-      statusText = "Faible à modérée";
-    } else if (report.countRange == '6-9') {
+      statusText = "Faible";
+    } else if (report.countRange == '6-10') {
+      gaugeColor = Colors.lightGreen;
+      statusText = "Faible";
+    } else if (report.countRange == '11-15') {
       gaugeColor = Colors.orange;
       statusText = "Forte";
-    } else {
+    } else if (report.countRange == '16-20') {
       gaugeColor = Colors.red;
       statusText = "Très forte";
+    } else { // '20+'
+      gaugeColor = Colors.purple;
+      statusText = "Saturé";
     }
 
     if (isStale) {

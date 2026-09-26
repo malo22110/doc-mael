@@ -22,14 +22,14 @@ void main() {
         await tester.tap(arriveButton);
         await tester.pumpAndSettle();
 
-        final zeroTwoButton = find.text("0 - 2 personnes");
+        final zeroTwoButton = find.text("0 - 5 personnes");
         expect(zeroTwoButton, findsOneWidget);
         await tester.tap(zeroTwoButton);
         await tester.pumpAndSettle();
 
         // Redirected back to HomeView, check if gauge updated
         await tester.pumpAndSettle(const Duration(seconds: 3)); // Wait for snackbar
-        expect(find.text("0-2"), findsOneWidget, reason: "Gauge should show the new value");
+        expect(find.text("0-5"), findsOneWidget, reason: "Gauge should show the new value");
     });
   });
 }
