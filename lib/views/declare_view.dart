@@ -44,7 +44,7 @@ class _DeclareViewState extends State<DeclareView> {
     // Cabinet de Maël-Carhaix
     const targetLat = 48.2568;
     const targetLon = -3.3986;
-    const double maxDistanceMeters = 2000; // 2km radius to account for poor GPS/Web location
+    const double maxDistanceMeters = 500; // 500m radius to account for poor GPS/Web location
 
     try {
       serviceEnabled = await Geolocator.isLocationServiceEnabled();
