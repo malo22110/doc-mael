@@ -240,6 +240,15 @@ class _IntentionsViewState extends State<IntentionsView> {
                   initialData: const [],
                   stream: widget.db.subscribeToIntentions(widget.locationId, targetDateStr),
                   builder: (context, snapshot) {
+                    if (snapshot.hasError) {
+                      debugPrint('Firestore Error (IntentionsView): ${snapshot.error}');
+                      return const Card(
+                        child: Padding(
+                          padding: EdgeInsets.all(16.0),
+                          child: Text("Données momentanément indisponibles.", textAlign: TextAlign.center),
+                        ),
+                      );
+                    }
                     if (snapshot.connectionState == ConnectionState.waiting && !snapshot.hasData) {
                       return const Center(child: CircularProgressIndicator());
                     }

@@ -52,6 +52,13 @@ class _PractitionerViewState extends State<PractitionerView> {
             StreamBuilder<DailyStatus?>(
               stream: widget.db.subscribeToDailyStatus(widget.locationId, _getTargetDate()),
               builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  debugPrint('Firestore Error (PractitionerView): ${snapshot.error}');
+                  return const Padding(
+                    padding: EdgeInsets.all(16.0),
+                    child: Text("Erreur de connexion. Veuillez réessayer plus tard.", textAlign: TextAlign.center),
+                  );
+                }
                 final currentCount = snapshot.data?.activeDoctors ?? 0;
                 
                 return Row(

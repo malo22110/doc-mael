@@ -108,7 +108,13 @@ class _HomeViewState extends State<HomeView> {
                 stream: widget.db.subscribeToIntentions(widget.locationId, targetDateStr),
                 builder: (context, snapshot) {
                   if (snapshot.hasError) {
-                    return Text('Erreur : ${snapshot.error}', style: const TextStyle(color: Colors.red));
+                    debugPrint('Firestore Error (Intentions): ${snapshot.error}');
+                    return const Card(
+                      child: Padding(
+                        padding: EdgeInsets.all(16.0),
+                        child: Text("Données momentanément indisponibles.", textAlign: TextAlign.center),
+                      ),
+                    );
                   }
                   
                   final intentions = snapshot.data ?? [];
@@ -173,7 +179,8 @@ class _HomeViewState extends State<HomeView> {
                 stream: widget.db.subscribeToDailyStatus(widget.locationId, targetDateStr),
                 builder: (context, snapshot) {
                   if (snapshot.hasError) {
-                    return Text('Erreur : ${snapshot.error}', style: const TextStyle(color: Colors.red));
+                    debugPrint('Firestore Error (DailyStatus): ${snapshot.error}');
+                    return const SizedBox.shrink(); // Don't show the doctor card if there's an error
                   }
                   final status = snapshot.data;
                   final doctors = status?.activeDoctors ?? 0;
@@ -210,9 +217,12 @@ class _HomeViewState extends State<HomeView> {
                 stream: widget.db.subscribeToLatestReport(widget.locationId),
                 builder: (context, snapshot) {
                   if (snapshot.hasError) {
-                    return Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Text('Erreur Base de données : ${snapshot.error}', style: const TextStyle(color: Colors.red)),
+                    debugPrint('Firestore Error (LatestReport): ${snapshot.error}');
+                    return const Card(
+                      child: Padding(
+                        padding: EdgeInsets.all(16.0),
+                        child: Text("Données d'affluence momentanément indisponibles.", textAlign: TextAlign.center),
+                      ),
                     );
                   }
                   if (snapshot.connectionState == ConnectionState.waiting && !snapshot.hasData) {
